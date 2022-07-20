@@ -1,8 +1,24 @@
  
- // React import not needed as there is no JSX returned
+ // React import not needed if there is no JSX returned
+
+ import { useEffect, useState } from "react";
 
  const Route = ({path, children}) => {
-    return window.location.pathname === path ? children : null;
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+    useEffect( () => {
+        const onLocationChange = () =>{
+            //console.log('location changed');
+            setCurrentPath(window.location.pathname);
+        }
+        window.addEventListener('popstate', onLocationChange);
+
+        return () =>{
+            window.removeEventListener('popstate', onLocationChange);
+        }
+    }, []);
+
+    return currentPath === path ? children : null;
  }
 
  export default Route;
